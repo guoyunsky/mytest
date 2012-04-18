@@ -1,0 +1,22 @@
+<project name="mytest" basedir= "." default="generate-protobuf" >
+
+	  <property name="src.dir" location="src" />
+	  <property name="src.java.dir" location="${src.dir}/java" />
+	  <property name="src.proto.dir" location="${src.dir}/proto" />
+	  <property name="src.gen.java.dir" location="${src.dir}/gen-java" /> 
+
+	  <target name="generate-protobuf" >
+	  	<delete dir="${src.gen.java.dir}"/>
+	  	<mkdir dir="${src.gen.java.dir}"/>
+	  	
+	    <apply executable="protoc" failonerror="true" skipemptyfilesets="true" verbose="true">
+	    	<env key="PATH" path="${env.PATH}:${basedir}/script" />
+	    	
+	      <arg value="--proto_path=${src.proto.dir}" />
+	      <arg value="--java_out=${src.gen.java.dir}" />
+	    	<arg value="--twadoop_out=${src.gen.java.dir}" />
+	      <fileset dir="${src.proto.dir}" includes="**/*.proto" />
+	    </apply>
+	  </target>
+
+</project>
