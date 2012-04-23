@@ -120,7 +120,7 @@ public class CnemcMain {
 	}
 	
 	public void writeMeta(StringBuilder sb) {
-		sb.append("今日空气质量日报 2012-04-23");
+		sb.append("<div align=\"center\">今日空气质量日报 2012-04-23</div>");
 	}
 	
 	public void writeDepot(StringBuilder sb, 
@@ -131,14 +131,14 @@ public class CnemcMain {
 	}
 	
 	public void writeTableHead(StringBuilder sb) {
-		sb.append("<table border=\"1\" style=\"width: 100%; border-collapse: collapse;\">");
+		sb.append("<table border=\"2\" style=\"width: 100%; border-collapse: collapse;\">");
 		sb.append("\r\t<thead>");
-		sb.append("\r\t<tr>省份</tr>");
-		sb.append("\r\t<tr>城市</tr>");
-		sb.append("\r\t<tr>空气污染指数</tr>");
-		sb.append("\r\t<tr>空气污染类型</tr>");
-		sb.append("\r\t<tr>空气污染级别</tr>");
-		sb.append("\r\t<tr>空气质量</tr>");
+		sb.append("\r\t<td width=\"20%\">省份</td>");
+		sb.append("\r\t<td width=\"20%\">城市</td>");
+		sb.append("\r\t<td width=\"20%\" align=\"center\">空气污染指数</td>");
+		sb.append("\r\t<td width=\"20%\">空气污染类型</td>");
+		sb.append("\r\t<td width=\"10%\">空气污染级别</td>");
+		sb.append("\r\t<td width=\"10%\">空气质量</td>");
 		sb.append("\r</thead>");
 		sb.append("\r<tbody>");
 	}
@@ -150,20 +150,21 @@ public class CnemcMain {
 	
 	public void writeAirQuality(StringBuilder sb, 
 			List<DailyAirQuality> daqs) {
-		sb.append("\r\t<tr>");
 		for(DailyAirQuality daq : daqs) {
-			sb.append(tdCreate(daq.getProvinceName()+"空气质量"));
-			sb.append(tdCreate(daq.getCityName()+"空气质量"));
+			sb.append("\r\t<tr>");
+			sb.append(tdCreate(daq.getProvinceName()+"省"));
+			sb.append(tdCreate("<strong>"+daq.getCityName()+"</strong>空气质量"));
 			sb.append(tdCreate(daq.getPollutionIndex()));
 			sb.append(tdCreate(daq.getPollutionType()));
 			sb.append(tdCreate(daq.getPollutionLevel()));
 			sb.append(tdCreate(daq.getAirQuality()));
+			sb.append("\r\t</tr>");
 		}
-		sb.append("\r\t</tr>");
+		
 	}
 	
 	private String tdCreate(String from) {
-		return "\r\t<td>".concat(from).concat("</tr>");
+		return "\r\t<td>".concat(from).concat("</td>");
 	}
 	
 	public boolean writeTodayBlog() {
@@ -177,7 +178,7 @@ public class CnemcMain {
 		
 		// 获取直辖市数据
 		daqs = iaqdao.queryZhiXiaShi();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() > 0) {
 			sb.append("<br>直辖市 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
@@ -186,7 +187,7 @@ public class CnemcMain {
 		
 		// 获取华东数据
 		daqs = iaqdao.queryHuaDong();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			sb.append("<br>华东 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
@@ -194,7 +195,7 @@ public class CnemcMain {
 		
 		// 获取华北数据
 		daqs = iaqdao.queryHuaBei();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			sb.append("<br>华北 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
@@ -202,15 +203,23 @@ public class CnemcMain {
 		
 		// 获取华南数据
 		daqs = iaqdao.queryHuaNan();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			sb.append("<br>华南 空气质量");
+			writeDepot(sb, daqs);
+			writeBlog = true;
+		}
+		
+		// 获取华南数据
+		daqs = iaqdao.queryHuaZhong();
+		if(daqs!=null && daqs.size() >0) {
+			sb.append("<br>华中 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
 		
 		// 获取西南数据
 		sb.append("<br>西南 空气质量");
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			daqs = iaqdao.queryXiNan();
 			writeDepot(sb, daqs);
 			writeBlog = true;
@@ -218,7 +227,7 @@ public class CnemcMain {
 		
 		// 获取东北数据
 		daqs = iaqdao.queryDongBei();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			sb.append("<br>东北 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
@@ -226,15 +235,16 @@ public class CnemcMain {
 		
 		// 获取西北数据
 		daqs = iaqdao.queryXiBei();
-		if(daqs!=null && daqs.size() >1) {
+		if(daqs!=null && daqs.size() >0) {
 			sb.append("<br>西北 空气质量");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
 		
 		if(writeBlog == true) {
-			MyWordpress.writeTodayBlog(sb.toString());
-			// System.out.println(sb.toString());
+			System.out.println(sb.toString());
+			//MyWordpress.writeTodayBlog(sb.toString());
+			
 		}
 		
 		return true;

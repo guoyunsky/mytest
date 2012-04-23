@@ -19,6 +19,8 @@ public interface IDailyAirQualityDAO {
 	public List<DailyAirQuality> queryHuaBei();
 	// 查询华南
 	public List<DailyAirQuality> queryHuaNan();
+	// 查询华中
+	public List<DailyAirQuality> queryHuaZhong();
 	// 查询西南
 	public List<DailyAirQuality> queryXiNan();
 	// 查询东北

@@ -163,6 +163,13 @@ public class DailyAirQualityDAOImpl implements IDailyAirQualityDAO {
 			" WHERE DEPOT_NAME='华北' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
 		return queryDAQ(sql);
 	}
+	
+	@Override
+	public List<DailyAirQuality> queryHuaZhong() {
+		String sql = SQL_QUERY_PREFIX.concat(
+			" WHERE DEPOT_NAME='华中' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	return queryDAQ(sql);
+	}
 
 	@Override
 	public List<DailyAirQuality> queryHuaDong() {
@@ -230,6 +237,8 @@ public class DailyAirQualityDAOImpl implements IDailyAirQualityDAO {
 		
 		return result;
 	}
+
+	
 	
 	
 
