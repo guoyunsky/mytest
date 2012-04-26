@@ -151,58 +151,116 @@ public class DailyAirQualityDAOImpl implements IDailyAirQualityDAO {
 	}
 
 	@Override
-	public List<DailyAirQuality> queryDongBei() {
-		String sql = SQL_QUERY_PREFIX.concat(
-				" WHERE DEPOT_NAME='东北' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryDongBei(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='东北' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='东北' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 
 	@Override
-	public List<DailyAirQuality> queryHuaBei() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='华北' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryHuaBei(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华北' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华北' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 	
 	@Override
-	public List<DailyAirQuality> queryHuaZhong() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='华中' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
-	return queryDAQ(sql);
-	}
-
-	@Override
-	public List<DailyAirQuality> queryHuaDong() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='华东' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
-	return queryDAQ(sql);
-	}
-
-	@Override
-	public List<DailyAirQuality> queryHuaNan() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='华南' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryHuaZhong(String dateStr) {		
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华中' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华中' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 
 	@Override
-	public List<DailyAirQuality> queryXiBei() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='西北' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryHuaDong(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华东' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华东' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 
 	@Override
-	public List<DailyAirQuality> queryXiNan() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='西南' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryHuaNan(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华南' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='华南' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 
 	@Override
-	public List<DailyAirQuality> queryZhiXiaShi() {
-		String sql = SQL_QUERY_PREFIX.concat(
-			" WHERE DEPOT_NAME='直辖市' AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+	public List<DailyAirQuality> queryXiBei(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='西北' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='西北' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
+		return queryDAQ(sql);
+	}
+
+	@Override
+	public List<DailyAirQuality> queryXiNan(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='西南' " +
+					"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE DEPOT_NAME='西南' " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
+		return queryDAQ(sql);
+	}
+
+	@Override
+	public List<DailyAirQuality> queryZhiXiaShi(String dateStr) {
+		String sql = null;
+		if(dateStr == null) {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE CITY_NAME IN " +
+					"('北京','上海','天津','重庆')" +
+				"AND DATE_TIME=CURDATE() GROUP BY PROVINCE_NAME;");
+		}else {
+			sql = SQL_QUERY_PREFIX.concat(" WHERE CITY_NAME IN " +
+					"('北京','上海','天津','重庆') " +
+			"AND DATE_TIME='" + dateStr +"' GROUP BY PROVINCE_NAME;");
+		}
+		
 		return queryDAQ(sql);
 	}
 

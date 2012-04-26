@@ -17,6 +17,17 @@ public class MyDateUtil {
 		return d.getTime();
 	}
 	
+	public static String getTodayDateStr() {
+		return Date2String(getTodayDate());
+	}
+	
+	public static String Date2String(Date date) {
+		SimpleDateFormat formatter = 
+			new SimpleDateFormat("yyyy-MM-dd");
+		
+		return formatter.format(date);
+	}
+	
 	public static long calDiffDay(Date from, Date to) {
 		long timeFrom = from.getTime();
 		long timeTo = to.getTime();
