@@ -76,7 +76,7 @@ public class MyWordpress {
 	
 	public static String writeLAirReportBlogByDay(String dateStr,
 			String blogContext) throws XmlRpcFault {
-		String title = "dateStr,空气质量日报,今日空气质量日报";
+		String title = dateStr + ",空气质量日报,今日空气质量日报";
 		return writeAirReportBlog(title,blogContext);
 		
 	}

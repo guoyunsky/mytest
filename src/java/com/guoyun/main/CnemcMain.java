@@ -47,24 +47,27 @@ public class CnemcMain {
 	public boolean crawlDaqs(int pages) throws ParseException {
 		List<DailyAirQuality> result = 
 			new ArrayList<DailyAirQuality>();
+		boolean insert = false;
 		
 		if(pages <=0) {
 			pages = DEFAULT_PAGE_NO;
 		}
 		
-		for(int i=1 ; i<pages ; i++) {
+		for(int i=1 ; i<=pages ; i++) {
 			result.addAll(extractor.getAirQualities(i));
-			while(insertDatas(result)) {
+			if(insertDatas(result)) {
 				result.clear();
 				result = new ArrayList<DailyAirQuality>();
-				result.addAll(extractor.getAirQualities(i));
-				continue;
+				insert = true;
+			}else {
+				break;
 			}
+				
 		}
 		
 		this.curMaxDate = iaqdao.queryMaxDate();
 		
-		return this.curMaxDate.before(this.todayDate);
+		return this.curMaxDate.before(this.todayDate) && insert;
 		
 	}
 	/**
@@ -195,8 +198,9 @@ public class CnemcMain {
 		
 		// 获取直辖市数据
 		daqs = iaqdao.queryZhiXiaShi(dateStr);
+		sb.append("<ul>");
 		if(daqs!=null && daqs.size() > 0) {
-			sb.append("<br>直辖市 空气质量");
+			sb.append("<li><br>直辖市 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -205,7 +209,7 @@ public class CnemcMain {
 		// 获取华东数据
 		daqs = iaqdao.queryHuaDong(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>华东 空气质量");
+			sb.append("<li><br>华东 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -213,7 +217,7 @@ public class CnemcMain {
 		// 获取华北数据
 		daqs = iaqdao.queryHuaBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>华北 空气质量");
+			sb.append("<li><br>华北 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -221,7 +225,7 @@ public class CnemcMain {
 		// 获取华南数据
 		daqs = iaqdao.queryHuaNan(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>华南 空气质量");
+			sb.append("<li><br>华南 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -229,13 +233,13 @@ public class CnemcMain {
 		// 获取华南数据
 		daqs = iaqdao.queryHuaZhong(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>华中 空气质量");
+			sb.append("<li><br>华中 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
 		
 		// 获取西南数据
-		sb.append("<br>西南 空气质量");
+		sb.append("<li><br>西南 空气质量</br></li>");
 		if(daqs!=null && daqs.size()>0) {
 			daqs = iaqdao.queryXiNan(dateStr);
 			writeDepot(sb, daqs);
@@ -245,7 +249,7 @@ public class CnemcMain {
 		// 获取东北数据
 		daqs = iaqdao.queryDongBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>东北 空气质量");
+			sb.append("<li><br>东北 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -253,10 +257,11 @@ public class CnemcMain {
 		// 获取西北数据
 		daqs = iaqdao.queryXiBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<br>西北 空气质量");
+			sb.append("<li><br>西北 空气质量</br></li>");
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
+		sb.append("</ul>");
 		
 		if(writeBlog == true) {
 			System.out.println(sb.toString());
@@ -274,7 +279,7 @@ public class CnemcMain {
 			main = new CnemcMain();
 			
 			// 插入数据
-			/*if(main.crawlDaqs()) {
+			if(main.crawlDaqs()) {
 				while(true){
 					if(!main.insertTodayDatas()){
 						Thread.sleep(10*60*1000);
@@ -282,7 +287,7 @@ public class CnemcMain {
 						break;
 					}
 				}
-			}*/
+			}
 			
 			// main.writeTodayBlog();
 			main.writeCurMaxDateBlog();
