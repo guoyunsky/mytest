@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.guoyun.util.MyDateUtil;
 
+import redstone.xmlrpc.XmlRpcArray;
 import redstone.xmlrpc.XmlRpcFault;
 
 import net.bican.wordpress.Page;
@@ -14,6 +15,8 @@ public class MyWordpress {
 	public static final String BLOG_HAOKONGQI_USER_NAME = "好空气";
 	public static final String BLOG_HAOKONGQI_USER_PWD = "521yangjuan";
 	public static final String BLOG_HAOKONGQI_URL = "http://www.haokongqi.net/xmlrpc.php";
+	public static final String BLOG_HAOKONGQI_DAILY_URL_PREFIX= 
+		"http://www.haokongqi.net/kongqizhiliang/daily/";
 	
 	public static Wordpress getWordpress(String userName, String passwd,String xmlRpcUrl) {
 		Wordpress wp = null;
@@ -60,24 +63,53 @@ public class MyWordpress {
 	}
 	
 	public static String writeAirReportBlog(String blogTitle ,
-			String blogContext) throws XmlRpcFault {
-		/*Page page = new Page();
+			String blogContext, String blogExcept) throws XmlRpcFault {
+		XmlRpcArray xra = new XmlRpcArray();
+		int postId = 0;
+		
+		Page page = new Page();
 		page.setTitle(blogTitle);
 		page.setDescription(blogContext);
+		
 		//page.setLink("http://www.haokongqi/daily/"")
-		*/		
-		Wordpress wp = getWordpress_Haokongqi();
+				
+		/*Wordpress wp = getWordpress_Haokongqi();
 		List<Page> pages = wp.getRecentPosts(1);
 		Page page = pages.get(0);
 		page.setTitle(blogTitle);
-		page.setDescription(blogContext);
+		page.setDescription(blogContext);*/
+		
+		xra.add("空气质量");
+		page.setCategories(xra);
+		/*page.setLink(BLOG_HAOKONGQI_DAILY_URL_PREFIX + 
+				MyDateUtil.getTodayDateNoCharStr() + ".html");
+		page.setPermaLink(BLOG_HAOKONGQI_DAILY_URL_PREFIX + 
+				MyDateUtil.getTodayDateNoCharStr() + ".html");*/
+		try {
+			postId = Integer.parseInt("1" + 
+					MyDateUtil.getTodayDateNoCharStr());
+			page.setPostid(postId);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		page.setMt_allow_comments(1);
+		page.setMt_allow_pings(1);
+		page.setExcerpt(blogExcept);
+		page.setMt_keywords("空气质量,空气质量日报,今日空气质量日报");
+		page.setPost_status("publish");
+		page.setUserid(1 + "");
+		page.setWp_author("好空气");
+		page.setWp_author_display_name("空气质量日报");
+		page.setWp_author_id("1");
+		
 		return writeBLog_Haokongqi(page);
 	}
 	
 	public static String writeLAirReportBlogByDay(String dateStr,
-			String blogContext) throws XmlRpcFault {
+			String blogContext, String blogExcept) throws XmlRpcFault {
 		String title = dateStr + ",空气质量日报,今日空气质量日报";
-		return writeAirReportBlog(title,blogContext);
+		return writeAirReportBlog(title,blogContext, blogExcept);
 		
 	}
 	

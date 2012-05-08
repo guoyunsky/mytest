@@ -6,8 +6,32 @@ import java.util.Date;
 import com.guoyun.util.CityUtil;
 import com.guoyun.util.MyDateUtil;
 import com.guoyun.util.PollutionLevelUtil;
-
+/**
+ * 空气指数类
+ * @author guoyun
+ *
+ */
 public class DailyAirQuality {
+	public static final int INDEX_YOU_FROM = 1;
+	public static final int INDEX_YOU_TO = 50;
+	public static final int INDEX_LIANG_FROM = 51;
+	public static final int INDEX_LIANG_TO = 100;
+	public static final int INDEX_QING_DU_FROM = 101;
+	public static final int INDEX_QING_DU_TO = 150;
+	public static final int INDEX_ZHONG_DU_FROM = 151;
+	public static final int INDEX_ZHONG_DU_TO = 200;
+	public static final int INDEX_ZHONG_DU_4_FROM = 201;
+	public static final int INDEX_ZHONG_DU_4_TO = 300;
+	public static final int INDEX_YAN_ZHONG_FROM = 300;
+	public static final int INDEX_YAN_ZHONG_TO = Integer.MAX_VALUE;
+	
+	public static final String AIR_YOU = "优";
+	public static final String AIR_LIANG = "良";
+	public static final String AIR_QING_DU = "轻度污染";
+	public static final String AIR_ZHONG_DU = "中度污染";
+	public static final String AIR_ZHONG_DU_4 = "重度污染";
+	public static final String AIR_YAN_ZHONG = "严重污染";
+	
 	private String cityName;		// 城市
 	private String provinceName;	// 省份
 	private String depotName;		// 华南，华北
@@ -129,8 +153,13 @@ public class DailyAirQuality {
 		}
 		
 		CityBelong cb = CityUtil.getCityBelong(this.cityName);
-		this.provinceName = cb.getProvinceName();
-		this.depotName = cb.getDepotName();
+		if(cb != null) {
+			this.provinceName = cb.getProvinceName();
+			this.depotName = cb.getDepotName();
+		}else {
+			System.err.println("error city name :" + this.cityName);
+		}
+		
 		
 		calPollution();
 	}

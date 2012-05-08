@@ -27,6 +27,22 @@ public interface IDailyAirQualityDAO {
 	public List<DailyAirQuality> queryDongBei(String dateStr);
 	// 查询西北
 	public List<DailyAirQuality> queryXiBei(String dateStr);
+	// 查询某天的摘要
+	public String queryExcept(String dateStr);
+	// 查询某天的平均空气指数
+	public double queryAvgIndex(String dateStr);
+	// 查询某天空气级别为优的空气(空气污染指数为0-50)
+	public List<DailyAirQuality> queryYouAir(String dateStr);
+	// 查询某天空气级别为良的空气（空气污染指数为50-100）
+	public List<DailyAirQuality> queryLiangAir(String dateStr);
+	// 查询某天空气级别为轻微污染的空气(空气污染指数为100-150)
+	public List<DailyAirQuality> queryQingDuAir(String dateStr);
+	// 查询某天空气级别为中度污染的空气(空气污染指数为150-200)
+	public List<DailyAirQuality> queryZhongDuAir(String dateStr);
+	// 查询某天空气级别为重度污染的空气(空气污染指数为200-300)
+	public List<DailyAirQuality> queryZhong4DuAir(String dateSt);
+	// 查询某天空气级别为严重污染的空气(空气污染指数为大于300)
+	public List<DailyAirQuality> queryYanZhongAir(String dateSt);
 	
 	// 查询当前数据最新的日期
 	public Date queryMaxDate();

@@ -34,9 +34,6 @@ public class CityUtil {
 	
 	public static CityBelong getCityBelong(String city) {
 		CityBelong cb = cityBelongs.get(city);
-		if(cb == null) {
-			cb = new CityBelong();
-		}
 		
 		return cb;
 	}

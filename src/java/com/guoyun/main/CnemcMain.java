@@ -11,6 +11,7 @@ import com.guoyun.dao.IDailyAirQualityDAO;
 import com.guoyun.dao.impl.DailyAirQualityDAOImpl;
 import com.guoyun.entity.DailyAirQuality;
 import com.guoyun.extractor.ExtractorCnemc;
+import com.guoyun.util.HtmlUtil;
 import com.guoyun.util.MyDateUtil;
 import com.guoyun.wordpress.MyWordpress;
 
@@ -19,6 +20,7 @@ public class CnemcMain {
 	public static final int DEFAULT_PAGE_NO = 10*4;
 	private Date curMaxDate = null;
 	private Date todayDate = null;
+	private Date dbMaxDate = null;
 	private boolean hasInsertTodayDatas = false;
 	private IDailyAirQualityDAO iaqdao = null;
 	private ExtractorCnemc extractor = null;
@@ -30,6 +32,7 @@ public class CnemcMain {
 	private void init() throws ParseException {
 		iaqdao = new DailyAirQualityDAOImpl();
 		curMaxDate = iaqdao.queryMaxDate();
+		dbMaxDate = new Date(curMaxDate.getTime());
 		todayDate = MyDateUtil.getTodayDate();
 		extractor = new ExtractorCnemc();
 	}
@@ -38,6 +41,55 @@ public class CnemcMain {
 		return crawlDaqs(calPage());
 	}
 	
+	
+	public Date getCurMaxDate() {
+		return curMaxDate;
+	}
+
+	public void setCurMaxDate(Date curMaxDate) {
+		this.curMaxDate = curMaxDate;
+	}
+
+	public Date getTodayDate() {
+		return todayDate;
+	}
+
+	public void setTodayDate(Date todayDate) {
+		this.todayDate = todayDate;
+	}
+
+	public Date getDbMaxDate() {
+		return dbMaxDate;
+	}
+
+	public void setDbMaxDate(Date dbMaxDate) {
+		this.dbMaxDate = dbMaxDate;
+	}
+
+	public boolean isHasInsertTodayDatas() {
+		return hasInsertTodayDatas;
+	}
+
+	public void setHasInsertTodayDatas(boolean hasInsertTodayDatas) {
+		this.hasInsertTodayDatas = hasInsertTodayDatas;
+	}
+
+	public IDailyAirQualityDAO getIaqdao() {
+		return iaqdao;
+	}
+
+	public void setIaqdao(IDailyAirQualityDAO iaqdao) {
+		this.iaqdao = iaqdao;
+	}
+
+	public ExtractorCnemc getExtractor() {
+		return extractor;
+	}
+
+	public void setExtractor(ExtractorCnemc extractor) {
+		this.extractor = extractor;
+	}
+
 	/**
 	 * 
 	 * @param pages
@@ -141,14 +193,14 @@ public class CnemcMain {
 	}
 	
 	public void writeTableHead(StringBuilder sb) {
-		sb.append("<table border=\"2\" style=\"width: 100%; border-collapse: collapse;\">");
+		sb.append("<table border=\"2\" style=\"width: 100%;\">");
 		sb.append("\r\t<thead>");
-		sb.append("\r\t<td width=\"20%\">省份</td>");
-		sb.append("\r\t<td width=\"20%\">城市</td>");
-		sb.append("\r\t<td width=\"20%\" align=\"center\">空气污染指数</td>");
-		sb.append("\r\t<td width=\"20%\">空气污染类型</td>");
-		sb.append("\r\t<td width=\"10%\">空气污染级别</td>");
-		sb.append("\r\t<td width=\"10%\">空气质量</td>");
+		sb.append("\r\t<th width=\"20%\">省份</th>");
+		sb.append("\r\t<th width=\"25%\">城市</th>");
+		sb.append("\r\t<th width=\"15%\" align=\"center\">空气污染指数</th>");
+		sb.append("\r\t<th width=\"20%\">空气污染类型</th>");
+		sb.append("\r\t<th width=\"10%\">空气污染级别</th>");
+		sb.append("\r\t<th width=\"10%\">空气质量</th>");
 		sb.append("\r</thead>");
 		sb.append("\r<tbody>");
 	}
@@ -174,7 +226,7 @@ public class CnemcMain {
 	}
 	
 	private String tdCreate(String from) {
-		return "\r\t<td>".concat(from).concat("</td>");
+		return "\r\t<td alitn=\"center\">".concat(from).concat("</td>");
 	}
 	
 	public boolean writeTodayBlog() throws XmlRpcFault {
@@ -196,11 +248,16 @@ public class CnemcMain {
 		dateStr = MyDateUtil.Date2String(date);
 		writeMeta(sb,dateStr);
 		
+		// 获取摘要
+		String zhaiyao = iaqdao.queryExcept(dateStr);
+		sb.append(zhaiyao);
+		sb.append("<br></br>");
+		
 		// 获取直辖市数据
 		daqs = iaqdao.queryZhiXiaShi(dateStr);
 		sb.append("<ul>");
 		if(daqs!=null && daqs.size() > 0) {
-			sb.append("<li><br>直辖市 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("直辖市"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -209,7 +266,7 @@ public class CnemcMain {
 		// 获取华东数据
 		daqs = iaqdao.queryHuaDong(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>华东 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("华东地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -217,7 +274,7 @@ public class CnemcMain {
 		// 获取华北数据
 		daqs = iaqdao.queryHuaBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>华北 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("华北地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -225,7 +282,7 @@ public class CnemcMain {
 		// 获取华南数据
 		daqs = iaqdao.queryHuaNan(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>华南 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("华南地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -233,13 +290,13 @@ public class CnemcMain {
 		// 获取华南数据
 		daqs = iaqdao.queryHuaZhong(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>华中 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("华中地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
 		
 		// 获取西南数据
-		sb.append("<li><br>西南 空气质量</br></li>");
+		sb.append(HtmlUtil.printDepot("西南地区"));
 		if(daqs!=null && daqs.size()>0) {
 			daqs = iaqdao.queryXiNan(dateStr);
 			writeDepot(sb, daqs);
@@ -249,7 +306,7 @@ public class CnemcMain {
 		// 获取东北数据
 		daqs = iaqdao.queryDongBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>东北 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("东北地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -257,7 +314,7 @@ public class CnemcMain {
 		// 获取西北数据
 		daqs = iaqdao.queryXiBei(dateStr);
 		if(daqs!=null && daqs.size() >0) {
-			sb.append("<li><br>西北 空气质量</br></li>");
+			sb.append(HtmlUtil.printDepot("西东地区"));
 			writeDepot(sb, daqs);
 			writeBlog = true;
 		}
@@ -265,12 +322,15 @@ public class CnemcMain {
 		
 		if(writeBlog == true) {
 			System.out.println(sb.toString());
-			MyWordpress.writeLAirReportBlogByDay(dateStr, sb.toString());
+			/*MyWordpress.writeLAirReportBlogByDay(dateStr, 
+					sb.toString(),zhaiyao);*/
 			
 		}
 		
 		return true;
 	}
+	
+	
 
 	public static void main(String[] args) throws InterruptedException {
 		CnemcMain main = null;
@@ -282,15 +342,26 @@ public class CnemcMain {
 			if(main.crawlDaqs()) {
 				while(true){
 					if(!main.insertTodayDatas()){
-						Thread.sleep(10*60*1000);
 						System.out.println("抓取完毕！");
 						break;
+					} else {
+						Thread.sleep(10*60*1000);
 					}
 				}
 			}
 			
 			// main.writeTodayBlog();
-			main.writeCurMaxDateBlog();
+			Date d = main.curMaxDate;
+			while(!d.after(main.todayDate)) {
+				if(d.after(main.dbMaxDate)) {
+					main.writeBlogByDay(d);
+					d = new Date(main.curMaxDate.getTime() + 
+							1000   *   60   *   60   *   24);
+				} else {
+					break;
+				}
+			}
+			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

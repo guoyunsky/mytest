@@ -21,9 +21,20 @@ public class MyDateUtil {
 		return Date2String(getTodayDate());
 	}
 	
+	public static String getTodayDateNoCharStr() {
+		return Date2StringNoChar(getTodayDate());
+	}
+	
 	public static String Date2String(Date date) {
 		SimpleDateFormat formatter = 
 			new SimpleDateFormat("yyyy-MM-dd");
+		
+		return formatter.format(date);
+	}
+	
+	public static String Date2StringNoChar(Date date) {
+		SimpleDateFormat formatter = 
+			new SimpleDateFormat("yyyyMMdd");
 		
 		return formatter.format(date);
 	}

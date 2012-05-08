@@ -92,7 +92,6 @@ public class ExtractorCnemc {
 							daq = new DailyAirQuality(cityName, 
 								pollutionType, pollutionLevel, 
 								pollutionIndex, airQuality, dateTime);
-							System.out.println(daq);
 							result.add(daq);
 						}
 					}
